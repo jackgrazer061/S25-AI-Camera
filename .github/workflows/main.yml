@@ -43,7 +43,7 @@ jobs:
 
       - name: Rename APK
         run: |
-          cp app/build/outputs/apk/debug/app-debug.apk S25-AI-Camera-v0.4.apk
+          cp app/build/outputs/apk/debug/app-debug.apk S25-AI-Camera-v0.5.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
