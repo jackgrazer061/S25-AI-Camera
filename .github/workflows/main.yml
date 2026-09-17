@@ -25,16 +25,28 @@ jobs:
         with:
           gradle-version: "8.10.2"
 
+      - name: Download Real-ESRGAN x2 AI model
+        run: |
+          mkdir -p app/src/main/assets
+          curl -L --fail --retry 3 \
+          "https://github.com/net2cn/Real-ESRGAN_GUI/raw/master/Real-ESRGAN_GUI/models/realesrgan_x2plus.onnx" \
+          -o app/src/main/assets/realesrgan_x2plus.onnx
+
+          echo "AI model size:"
+          ls -lh app/src/main/assets/realesrgan_x2plus.onnx
+
+          test $(stat -c%s app/src/main/assets/realesrgan_x2plus.onnx) -gt 50000000
+
       - name: Build debug APK
         run: gradle assembleDebug --stacktrace
 
       - name: Rename APK
         run: |
-          cp app/build/outputs/apk/debug/app-debug.apk S25-AI-Camera-v0.2.apk
+          cp app/build/outputs/apk/debug/app-debug.apk S25-AI-Camera-v0.3.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: S25-AI-Camera-v0.2
-          path: S25-AI-Camera-v0.2.apk
+          name: S25-AI-Camera-v0.3
+          path: S25-AI-Camera-v0.3.apk
           if-no-files-found: error
