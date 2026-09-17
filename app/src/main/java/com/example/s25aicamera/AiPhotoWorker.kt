@@ -1063,3 +1063,83 @@ class AiPhotoWorker(
      * ==============================
      * SAVE FINAL AI 4K PHOTO
      * ==============================
+     */
+    private fun saveEnhanced(
+        bitmap: Bitmap,
+        zoom: Float
+    ) {
+        val date =
+            SimpleDateFormat(
+                "yyyyMMdd_HHmmss_SSS",
+                Locale.US
+            ).format(
+                System.currentTimeMillis()
+            )
+
+        val name =
+            "S25AI_${date}_${zoom.toInt()}x_AI4K.jpg"
+
+        val values =
+            ContentValues().apply {
+
+                put(
+                    MediaStore.Images.Media.DISPLAY_NAME,
+                    name
+                )
+
+                put(
+                    MediaStore.Images.Media.MIME_TYPE,
+                    "image/jpeg"
+                )
+
+                put(
+                    MediaStore.Images.Media.RELATIVE_PATH,
+                    "Pictures/S25 AI Camera/Enhanced"
+                )
+
+                put(
+                    MediaStore.Images.Media.IS_PENDING,
+                    1
+                )
+            }
+
+        val uri =
+            applicationContext
+                .contentResolver
+                .insert(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    values
+                )
+                ?: error(
+                    "Cannot create AI 4K photo"
+                )
+
+        applicationContext
+            .contentResolver
+            .openOutputStream(uri)
+            ?.use { output ->
+
+                bitmap.compress(
+                    Bitmap.CompressFormat.JPEG,
+                    98,
+                    output
+                )
+            }
+
+        values.clear()
+
+        values.put(
+            MediaStore.Images.Media.IS_PENDING,
+            0
+        )
+
+        applicationContext
+            .contentResolver
+            .update(
+                uri,
+                values,
+                null,
+                null
+            )
+    }
+}
