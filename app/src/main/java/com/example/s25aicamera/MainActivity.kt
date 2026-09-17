@@ -358,8 +358,7 @@ class MainActivity : AppCompatActivity() {
                 .build()
 
         val request =
-            OneTimeWorkRequestBuilder
-                <AiPhotoWorker>()
+            OneTimeWorkRequestBuilder<AiPhotoWorker>()
                 .setInputData(data)
                 .addTag("S25_AI_PHOTO")
                 .build()
